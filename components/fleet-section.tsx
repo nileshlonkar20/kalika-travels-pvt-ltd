@@ -19,6 +19,9 @@ const serviceGalleries: Record<string, string[]> = {
     "/images/1-inside.jpeg",
     "/images/2-inside.jpeg",
     "/images/3-inside.jpeg",
+    "/images/4-inside.jpeg",
+    "/images/5-inside.jpeg",
+    "/images/6-inside.jpeg",
   ],
 }
 
@@ -87,6 +90,7 @@ export function FleetSection() {
                   <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur">
                     <Images className="h-3.5 w-3.5" />
                     View {serviceGalleries[service.id].length} photos
+                    {service.id === "tempo-traveller" ? " · 6 inside" : ""}
                   </span>
                 ) : null}
                 <div className="absolute right-3 top-3 rounded-full bg-accent px-3 py-1 text-sm font-bold text-accent-foreground shadow">
@@ -133,7 +137,7 @@ export function FleetSection() {
           className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
-            aria-label={`${galleryTitles[selectedGallery] || "Vehicle photo gallery"}`}
+          aria-label={galleryTitles[selectedGallery] || "Vehicle photo gallery"}
           onClick={closeGallery}
         >
           <div
@@ -160,7 +164,7 @@ export function FleetSection() {
             <div className="relative aspect-video overflow-hidden rounded-xl bg-secondary">
               <Image
                 src={gallery[selectedImage]}
-                alt={`Tempo Traveller photo ${selectedImage + 1}`}
+                alt={`${galleryTitles[selectedGallery] || "Vehicle"} photo ${selectedImage + 1}`}
                 fill
                 sizes="(min-width: 1024px) 900px, 100vw"
                 className="object-contain"
@@ -192,7 +196,7 @@ export function FleetSection() {
                   className={`relative aspect-square overflow-hidden rounded-lg border-2 ${
                     selectedImage === index ? "border-accent" : "border-transparent"
                   }`}
-                  aria-label={`Show photo ${index + 1}`}
+                  aria-label={`Show ${selectedGallery === "tempo-traveller" && index >= 3 ? "inside" : "exterior"} photo ${index + 1}`}
                   aria-pressed={selectedImage === index}
                 >
                   <Image
@@ -202,6 +206,11 @@ export function FleetSection() {
                     sizes="120px"
                     className="object-cover"
                   />
+                  {selectedGallery === "tempo-traveller" && index >= 3 ? (
+                    <span className="absolute inset-x-0 bottom-0 bg-black/65 py-1 text-[10px] font-semibold text-white">
+                      Inside
+                    </span>
+                  ) : null}
                 </button>
               ))}
             </div>

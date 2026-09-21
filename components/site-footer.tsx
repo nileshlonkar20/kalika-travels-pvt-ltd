@@ -10,7 +10,7 @@ export function SiteFooter() {
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent text-accent-foreground">
               <Bus className="h-6 w-6" />
             </span>
-            <span className="font-heading text-lg font-bold">Kalika Travels</span>
+            <span className="font-heading text-lg font-bold">Kalika Translink</span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-primary-foreground/75">
             Offering buses, cars and tempo travellers on rent in Pune for over 15 years. Affordable, reliable and 100%
@@ -84,7 +84,7 @@ export function SiteFooter() {
 
       <div className="border-t border-primary-foreground/15">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-center text-sm text-primary-foreground/70 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:text-left">
-          <span>&copy; {new Date().getFullYear()} Kalika Travels, Pune. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} Kalika Translink, Pune. All rights reserved.</span>
           <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 sm:justify-end" aria-label="Legal links">
             <a href="/privacy" className="transition-colors hover:text-primary-foreground">Privacy</a>
             <a href="/terms" className="transition-colors hover:text-primary-foreground">Terms</a>

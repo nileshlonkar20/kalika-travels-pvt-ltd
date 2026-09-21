@@ -32,9 +32,9 @@ export function TestimonialSection() {
         <figure className="mt-10 rounded-2xl border border-border bg-card p-8 shadow-sm sm:p-12">
           <Quote className="mx-auto h-10 w-10 text-accent" aria-hidden />
           <blockquote className="mt-6 text-lg leading-relaxed text-foreground sm:text-xl">
-            &ldquo;We had hired a bus from Kalika Travels for an office outing. The driver was punctual and the bus was in
+            &ldquo;We had hired a bus from Kalika Translink for an office outing. The driver was punctual and the bus was in
             a well-maintained condition. We had a good experience during the entire process — from making the booking
-            to the end of the journey. Will definitely recommend Kalika Travels if you need their services.&rdquo;
+            to the end of the journey. Will definitely recommend Kalika Translink if you need their services.&rdquo;
           </blockquote>
           <div className="mt-6 flex items-center justify-center gap-1 text-accent">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -61,7 +61,7 @@ export function TestimonialSection() {
                 playsInline
                 preload={index === 0 ? "metadata" : "none"}
                 onPlay={() => handleVideoPlay(index)}
-                aria-label={`Kalika Travels ${video.label} video`}
+                aria-label={`Kalika Translink ${video.label} video`}
               >
                 <source src={video.src} type="video/mp4" />
                 Your browser does not support this customer video.

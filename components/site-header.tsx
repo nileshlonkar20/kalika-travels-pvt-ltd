@@ -92,7 +92,7 @@ export function SiteHeader() {
               <Bus className="h-6 w-6" />
             </span>
             <span className="min-w-0 leading-tight">
-              <span className="block truncate font-heading text-base font-bold text-foreground sm:text-lg">Kalika Travels</span>
+              <span className="block truncate font-heading text-base font-bold text-foreground sm:text-lg">Kalika Translink</span>
               <span className="block text-xs font-medium uppercase tracking-widest text-muted-foreground">
                 Travel · Pune
               </span>

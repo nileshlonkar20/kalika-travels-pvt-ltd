@@ -2,10 +2,10 @@ import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
 
 const galleryImages = [
-  { src: "/images/bus_32_seater.jpeg", alt: "Kalika Travels 32 seater bus", label: "Group travel" },
-  { src: "/images/ertiga_9077.jpeg", alt: "Kalika Travels Ertiga", label: "Family rides" },
-  { src: "/images/tempo_traveler_8757.jpeg", alt: "Kalika Travels tempo traveller", label: "Tempo traveller" },
-  { src: "/images/innova_7722.jpeg", alt: "Kalika Travels Innova", label: "Premium comfort" },
+  { src: "/images/bus_32_seater.jpeg", alt: "Kalika Translink 32 seater bus", label: "Group travel" },
+  { src: "/images/ertiga_9077.jpeg", alt: "Kalika Translink Ertiga", label: "Family rides" },
+  { src: "/images/tempo_traveler_8757.jpeg", alt: "Kalika Translink tempo traveller", label: "Tempo traveller" },
+  { src: "/images/innova_7722.jpeg", alt: "Kalika Translink Innova", label: "Premium comfort" },
 ]
 
 export function GallerySection() {

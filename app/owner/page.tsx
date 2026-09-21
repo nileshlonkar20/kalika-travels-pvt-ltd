@@ -203,7 +203,7 @@ export default function OwnerDashboardPage() {
         <div className="mb-8 flex flex-col gap-5 rounded-2xl bg-primary p-6 shadow-lg sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Owner Panel</p>
-            <h1 className="mt-2 font-heading text-3xl font-bold text-primary-foreground sm:text-4xl">Kalika Travels Dashboard</h1>
+            <h1 className="mt-2 font-heading text-3xl font-bold text-primary-foreground sm:text-4xl">Kalika Translink Dashboard</h1>
             <p className="mt-2 text-sm text-primary-foreground/75">Manage enquiries and contact customers directly.</p>
           </div>
           <button

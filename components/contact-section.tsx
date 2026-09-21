@@ -113,7 +113,7 @@ export function ContactSection() {
             <div className="mt-8 space-y-5">
               <a
                 href={contact.phoneHref}
-                aria-label={`Call Kalika Travels at ${contact.phone}`}
+                aria-label={`Call Kalika Translink at ${contact.phone}`}
                 className="group flex items-start gap-4"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">

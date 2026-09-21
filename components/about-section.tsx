@@ -11,7 +11,7 @@ export function AboutSection() {
             <div className="aspect-[4/3] overflow-hidden rounded-2xl shadow-xl">
               <img
                 src="/images/owner_about.jpeg"
-                alt="Nilesh Lonkar, owner of Kalika Travels"
+                alt="Nilesh Lonkar, owner of Kalika Translink"
                 loading="lazy"
                 className="h-full w-full object-cover"
               />
@@ -28,7 +28,7 @@ export function AboutSection() {
               Your trusted travel partner in Pune
             </h2>
             <p className="mt-5 text-muted-foreground leading-relaxed">
-              Kalika Travels has completed 15 years of trusted service, offering buses on rent, private cab services
+              Kalika Translink has completed 15 years of trusted service, offering buses on rent, private cab services
               and tempo traveller rentals across Pune and Pimpri-Chinchwad. Our office is close to Pune Airport and
               Pune Railway Station, and every member of our staff is well-skilled and experienced in this field.
             </p>

@@ -16,19 +16,19 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'Kalika Travels — Bus, Car & Tempo Traveller on Rent in Pune',
+  title: 'Kalika Translink — Bus, Car & Tempo Traveller on Rent in Pune',
   description:
     'Trusted travel agency in Pune offering AC/Non-AC buses, cars and tempo travellers on rent with experienced drivers. 15+ years of safe, affordable and reliable journeys across Maharashtra.',
   keywords: ['bus rental Pune', 'car rental Pune', 'tempo traveller Pune', 'outstation travel Maharashtra'],
   openGraph: {
-    title: 'Kalika Travels — Reliable travel across Pune and Maharashtra',
+    title: 'Kalika Translink — Reliable travel across Pune and Maharashtra',
     description: 'Buses, cars and tempo travellers on rent with experienced drivers and dependable service.',
     type: 'website',
     images: ['/images/owner_about.jpeg'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kalika Travels — Bus, Car & Tempo Traveller on Rent in Pune',
+    title: 'Kalika Translink — Bus, Car & Tempo Traveller on Rent in Pune',
     description: 'Reliable buses, cars and tempo travellers with experienced drivers.',
     images: ['/images/owner_about.jpeg'],
   },

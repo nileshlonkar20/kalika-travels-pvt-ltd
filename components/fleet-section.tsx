@@ -93,10 +93,6 @@ export function FleetSection() {
                     {service.id === "tempo-traveller" ? " · 6 inside" : ""}
                   </span>
                 ) : null}
-                <div className="absolute right-3 top-3 rounded-full bg-accent px-3 py-1 text-sm font-bold text-accent-foreground shadow">
-                  from {service.price}
-                  <span className="font-medium">{service.unit}</span>
-                </div>
               </button>
 
               <div className="flex flex-1 flex-col p-6">

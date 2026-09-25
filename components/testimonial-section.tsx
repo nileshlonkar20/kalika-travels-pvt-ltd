@@ -13,12 +13,40 @@ const customerVideos = [
 export function TestimonialSection() {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [activeVideo, setActiveVideo] = useState(0)
+  const [rating, setRating] = useState(0)
+  const [feedback, setFeedback] = useState("")
+  const [name, setName] = useState("")
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleVideoPlay = (playingIndex: number) => {
     videoRefs.current.forEach((video, index) => {
       if (index !== playingIndex) video?.pause()
     })
     setActiveVideo(playingIndex)
+  }
+
+  const handleRatingSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!rating) return
+
+    setIsSubmitting(true)
+    try {
+      const response = await fetch("/api/ratings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rating, name, feedback }),
+      })
+      if (!response.ok) throw new Error("Unable to submit rating")
+      setIsSubmitted(true)
+      setRating(0)
+      setName("")
+      setFeedback("")
+    } catch {
+      window.alert("Unable to submit your rating right now. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -104,6 +132,58 @@ export function TestimonialSection() {
         <p className="mt-8 text-sm font-medium text-muted-foreground">
           Rated <span className="font-bold text-foreground">4.8 out of 5</span> across 660+ customer reviews
         </p>
+
+        <div className="mt-10 rounded-2xl border border-border bg-card p-6 text-left shadow-sm sm:p-8">
+          <div className="text-center">
+            <h3 className="font-heading text-xl font-bold text-foreground">How was your experience?</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Your feedback helps us serve travellers better.</p>
+          </div>
+          {isSubmitted ? (
+            <div className="mx-auto mt-5 max-w-md rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-center text-sm font-medium text-emerald-700">
+              Thank you for your response. We appreciate your feedback.
+            </div>
+          ) : (
+            <form className="mx-auto mt-5 grid max-w-md gap-4" onSubmit={handleRatingSubmit}>
+              <div className="flex justify-center gap-2" aria-label="Choose a rating">
+                {Array.from({ length: 5 }).map((_, index) => {
+                  const value = index + 1
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setRating(value)}
+                      className="rounded-md p-1 text-accent transition-transform hover:scale-110 focus-visible:ring-2 focus-visible:ring-ring"
+                      aria-label={`${value} star${value === 1 ? "" : "s"}`}
+                      aria-pressed={rating === value}
+                    >
+                      <Star className={`h-8 w-8 ${rating >= value ? "fill-accent" : ""}`} />
+                    </button>
+                  )
+                })}
+              </div>
+              <input
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Your name (optional)"
+                className="h-11 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <textarea
+                value={feedback}
+                onChange={(event) => setFeedback(event.target.value)}
+                placeholder="Tell us about your journey (optional)"
+                rows={3}
+                className="rounded-md border border-input bg-background p-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <button
+                type="submit"
+                disabled={!rating || isSubmitting}
+                className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSubmitting ? "Submitting..." : "Submit rating"}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </section>
   )

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Mail, Phone, Trash2 } from "lucide-react"
+import { Mail, Phone, Star, Trash2 } from "lucide-react"
 
 const OWNER_USERNAME = "kalikatravels"
 
@@ -41,6 +41,14 @@ type TripEnquiry = {
   travelDate?: string | null
   passengers?: number | null
   createdAt: string
+}
+
+type Rating = {
+  id: number
+  name?: string | null
+  rating: number
+  feedback?: string | null
+  created_at: string
 }
 
 function phoneDigits(phone: string) {
@@ -85,6 +93,7 @@ export default function OwnerDashboardPage() {
   const [callbackRequests, setCallbackRequests] = useState<CallbackRequest[]>([])
   const [messages, setMessages] = useState<MessageItem[]>([])
   const [tripEnquiries, setTripEnquiries] = useState<TripEnquiry[]>([])
+  const [ratings, setRatings] = useState<Rating[]>([])
   const [actionError, setActionError] = useState("")
 
   useEffect(() => {
@@ -95,15 +104,17 @@ export default function OwnerDashboardPage() {
         if (!sessionResult.authenticated) return
 
         setIsAllowed(true)
-        const [callbackResponse, messageResponse, tripResponse] = await Promise.all([
+        const [callbackResponse, messageResponse, tripResponse, ratingResponse] = await Promise.all([
           fetch("/api/callback-requests"),
           fetch("/api/messages"),
           fetch("/api/trip-enquiries"),
+          fetch("/api/ratings"),
         ])
 
         const callbackResult = await callbackResponse.json()
         const messageResult = await messageResponse.json()
         const tripResult = await tripResponse.json()
+        const ratingResult = await ratingResponse.json()
 
         if (callbackResponse.ok && Array.isArray(callbackResult.callbackRequests)) {
           setCallbackRequests(callbackResult.callbackRequests)
@@ -115,10 +126,14 @@ export default function OwnerDashboardPage() {
         if (tripResponse.ok && Array.isArray(tripResult.tripEnquiries)) {
           setTripEnquiries(tripResult.tripEnquiries)
         }
+        if (ratingResponse.ok && Array.isArray(ratingResult.ratings)) {
+          setRatings(ratingResult.ratings)
+        }
       } catch {
         setCallbackRequests([])
         setMessages([])
         setTripEnquiries([])
+        setRatings([])
       }
     }
 
@@ -279,6 +294,34 @@ export default function OwnerDashboardPage() {
                     <Trash2 className="h-3.5 w-3.5" />
                     Delete request
                   </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-10 rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <h2 className="font-heading text-2xl font-bold text-foreground">Customer Ratings</h2>
+          </div>
+          {ratings.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border bg-secondary/40 p-8 text-center text-muted-foreground">
+              No ratings yet.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {ratings.map((rating) => (
+                <div key={rating.id} className="rounded-xl border border-border bg-background p-4">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="font-heading text-lg font-semibold text-foreground">{rating.name || "Anonymous customer"}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(rating.created_at).toLocaleString()}</p>
+                  </div>
+                  <div className="mt-2 flex items-center gap-1 text-accent" aria-label={`${rating.rating} out of 5 stars`}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star key={index} className={`h-4 w-4 ${index < rating.rating ? "fill-accent" : ""}`} />
+                    ))}
+                  </div>
+                  {rating.feedback ? <p className="mt-3 text-sm text-foreground/80">{rating.feedback}</p> : null}
                 </div>
               ))}
             </div>

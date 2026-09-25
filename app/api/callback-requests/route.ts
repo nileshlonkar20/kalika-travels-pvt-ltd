@@ -9,9 +9,8 @@ export async function GET(request: Request) {
 
   try {
     const { data, error } = await getSupabaseAdminClient()
-      .from("enquiries")
-      .select("id, name, phone, vehicle, travel_date, passengers, destination, source, created_at")
-      .eq("source", "callback")
+      .from("quick_enquiries")
+      .select("id, name, phone, vehicle, travel_date, passengers, destination, created_at")
       .order("created_at", { ascending: false })
 
     if (error) throw error
@@ -55,14 +54,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Enter a valid 10-digit mobile number." }, { status: 400 })
     }
 
-    const { error } = await getSupabasePublicClient().from("enquiries").insert({
+    const { error } = await getSupabasePublicClient().from("quick_enquiries").insert({
       name,
       phone,
       vehicle: trip || null,
       travel_date: travelDate || null,
       destination: destination || null,
       passengers: passengers ? Number(passengers) : null,
-      source: "callback",
     })
 
     if (error) throw error
@@ -93,7 +91,7 @@ export async function DELETE(request: Request) {
     }
 
     const { error, count } = await getSupabaseAdminClient()
-      .from("enquiries")
+      .from("quick_enquiries")
       .delete({ count: "exact" })
       .eq("id", requestId)
 

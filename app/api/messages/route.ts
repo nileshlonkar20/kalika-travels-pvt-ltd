@@ -9,9 +9,8 @@ export async function GET(request: Request) {
 
   try {
     const { data, error } = await getSupabaseAdminClient()
-      .from("enquiries")
-      .select("id, name, phone, email, message, vehicle, travel_date, destination, passengers, source, created_at")
-      .eq("source", "message")
+      .from("contact_messages")
+      .select("id, name, phone, email, message, created_at")
       .order("created_at", { ascending: false })
 
     if (error) throw error
@@ -22,11 +21,11 @@ export async function GET(request: Request) {
       phone: item.phone,
       email: item.email,
       message: item.message,
-      trip: item.vehicle,
-      travelDate: item.travel_date,
-      destination: item.destination,
-      passengers: item.passengers,
-      source: item.source,
+      trip: null,
+      travelDate: null,
+      destination: null,
+      passengers: null,
+      source: "message",
       createdAt: item.created_at,
     }))
 
@@ -52,16 +51,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Enter a valid 10-digit mobile number." }, { status: 400 })
     }
 
-    const { error } = await getSupabasePublicClient().from("enquiries").insert({
+    const { error } = await getSupabasePublicClient().from("contact_messages").insert({
       name,
       phone,
       email,
       message,
-      vehicle: trip || null,
-      travel_date: travelDate || null,
-      destination: destination || null,
-      passengers: passengers ? Number(passengers) : null,
-      source: "message",
     })
 
     if (error) throw error
@@ -87,10 +81,9 @@ export async function DELETE(request: Request) {
     }
 
     const { error, count } = await getSupabaseAdminClient()
-      .from("enquiries")
+      .from("contact_messages")
       .delete({ count: "exact" })
       .eq("id", messageId)
-      .eq("source", "message")
 
     if (error) throw error
     return NextResponse.json({ success: count === 1, affectedRows: count || 0 })

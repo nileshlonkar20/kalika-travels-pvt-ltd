@@ -1,14 +1,6 @@
 import { NextResponse } from "next/server"
 import { getOwnerSession, isOwnerSessionValid } from "@/lib/owner-auth"
-import { getSupabaseAdminClient, getSupabasePublicClient } from "@/lib/supabase"
-
-function getErrorMessage(error: unknown) {
-  if (error instanceof Error) return error.message
-  if (typeof error === "object" && error !== null && "message" in error) {
-    return String(error.message)
-  }
-  return "Unknown error"
-}
+import { getSupabaseAdminClient, getSupabaseErrorMessage, getSupabasePublicClient } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   if (!isOwnerSessionValid(getOwnerSession(request))) {
@@ -18,7 +10,8 @@ export async function GET(request: Request) {
   try {
     const { data, error } = await getSupabaseAdminClient()
       .from("enquiries")
-      .select("id, name, phone, vehicle, travel_date, passengers, destination, created_at")
+      .select("id, name, phone, vehicle, travel_date, passengers, destination, source, created_at")
+      .eq("source", "callback")
       .order("created_at", { ascending: false })
 
     if (error) throw error
@@ -41,7 +34,7 @@ export async function GET(request: Request) {
       {
         success: false,
         message: "Unable to fetch callback requests",
-        error: getErrorMessage(error),
+        error: getSupabaseErrorMessage(error),
         callbackRequests: [],
       },
       { status: 500 }
@@ -69,6 +62,7 @@ export async function POST(request: Request) {
       travel_date: travelDate || null,
       destination: destination || null,
       passengers: passengers ? Number(passengers) : null,
+      source: "callback",
     })
 
     if (error) throw error
@@ -79,7 +73,7 @@ export async function POST(request: Request) {
       {
         success: false,
         message: "Unable to save callback request",
-        error: getErrorMessage(error),
+        error: getSupabaseErrorMessage(error),
       },
       { status: 500 }
     )
@@ -107,7 +101,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ success: count === 1, affectedRows: count || 0 })
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Unable to delete callback request", error: getErrorMessage(error) },
+      { success: false, message: "Unable to delete callback request", error: getSupabaseErrorMessage(error) },
       { status: 500 },
     )
   }

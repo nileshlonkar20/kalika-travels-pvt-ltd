@@ -1,34 +1,6 @@
 import { NextResponse } from "next/server"
-import { assertDatabaseConfig, db } from "@/lib/db"
 import { getOwnerSession, isOwnerSessionValid } from "@/lib/owner-auth"
-
-async function ensureTable() {
-  assertDatabaseConfig()
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS messages (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      phone VARCHAR(50) NOT NULL,
-      email VARCHAR(255) NOT NULL,
-      message TEXT NOT NULL,
-      trip VARCHAR(255) DEFAULT NULL,
-      source VARCHAR(50) NOT NULL DEFAULT 'message',
-      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
-  `)
-
-  for (const column of [
-    "ALTER TABLE messages ADD COLUMN travel_date DATE DEFAULT NULL",
-    "ALTER TABLE messages ADD COLUMN destination VARCHAR(255) DEFAULT NULL",
-    "ALTER TABLE messages ADD COLUMN passengers INT DEFAULT NULL",
-  ]) {
-    try {
-      await db.execute(column)
-    } catch {
-      // Existing deployments already have the column.
-    }
-  }
-}
+import { getSupabaseAdminClient, getSupabaseErrorMessage, getSupabasePublicClient } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   if (!isOwnerSessionValid(getOwnerSession(request))) {
@@ -36,33 +8,40 @@ export async function GET(request: Request) {
   }
 
   try {
-    await ensureTable()
+    const { data, error } = await getSupabaseAdminClient()
+      .from("enquiries")
+      .select("id, name, phone, email, message, vehicle, travel_date, destination, passengers, source, created_at")
+      .eq("source", "message")
+      .order("created_at", { ascending: false })
 
-    const [rows] = await db.execute(
-      `SELECT id, name, phone, email, message, trip, travel_date as travelDate, destination, passengers, source, created_at as createdAt
-       FROM messages
-       ORDER BY created_at DESC`
-    )
+    if (error) throw error
 
-    return NextResponse.json({ success: true, messages: rows })
+    const messages = data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      phone: item.phone,
+      email: item.email,
+      message: item.message,
+      trip: item.vehicle,
+      travelDate: item.travel_date,
+      destination: item.destination,
+      passengers: item.passengers,
+      source: item.source,
+      createdAt: item.created_at,
+    }))
+
+    return NextResponse.json({ success: true, messages })
   } catch (error) {
     return NextResponse.json(
-      {
-        success: false,
-        message: "Unable to fetch messages",
-        error: error instanceof Error ? error.message : "Unknown error",
-        messages: [],
-      },
-      { status: 500 }
+      { success: false, message: "Unable to fetch messages", error: getSupabaseErrorMessage(error), messages: [] },
+      { status: 500 },
     )
   }
 }
 
 export async function POST(request: Request) {
   try {
-    await ensureTable()
-
-    const { name, phone, email, message, trip, travelDate, destination, passengers, source, createdAt } = await request.json()
+    const { name, phone, email, message, trip, travelDate, destination, passengers } = await request.json()
 
     if (!name || !phone || !email || !message) {
       return NextResponse.json({ success: false, message: "All fields are required." }, { status: 400 })
@@ -73,21 +52,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Enter a valid 10-digit mobile number." }, { status: 400 })
     }
 
-    await db.execute(
-      `INSERT INTO messages (name, phone, email, message, trip, travel_date, destination, passengers, source, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, phone, email, message, trip || null, travelDate || null, destination || null, passengers ? Number(passengers) : null, source || "message", createdAt || new Date().toISOString()]
-    )
+    const { error } = await getSupabasePublicClient().from("enquiries").insert({
+      name,
+      phone,
+      email,
+      message,
+      vehicle: trip || null,
+      travel_date: travelDate || null,
+      destination: destination || null,
+      passengers: passengers ? Number(passengers) : null,
+      source: "message",
+    })
 
+    if (error) throw error
     return NextResponse.json({ success: true, message: "Message saved successfully." })
   } catch (error) {
     return NextResponse.json(
-      {
-        success: false,
-        message: "Unable to save message",
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 }
+      { success: false, message: "Unable to save message", error: getSupabaseErrorMessage(error) },
+      { status: 500 },
     )
   }
 }
@@ -98,19 +80,23 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    assertDatabaseConfig()
     const { id } = await request.json()
     const messageId = Number(id)
     if (!Number.isSafeInteger(messageId) || messageId < 1) {
       return NextResponse.json({ success: false, message: "A valid message id is required." }, { status: 400 })
     }
 
-    const [result] = await db.execute("DELETE FROM messages WHERE id = ?", [messageId])
-    const affectedRows = "affectedRows" in result ? result.affectedRows : 0
-    return NextResponse.json({ success: affectedRows === 1, affectedRows })
+    const { error, count } = await getSupabaseAdminClient()
+      .from("enquiries")
+      .delete({ count: "exact" })
+      .eq("id", messageId)
+      .eq("source", "message")
+
+    if (error) throw error
+    return NextResponse.json({ success: count === 1, affectedRows: count || 0 })
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Unable to delete message", error: error instanceof Error ? error.message : "Unknown error" },
+      { success: false, message: "Unable to delete message", error: getSupabaseErrorMessage(error) },
       { status: 500 },
     )
   }

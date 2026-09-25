@@ -1,5 +1,13 @@
 import { createClient } from "@supabase/supabase-js"
 
+export function getSupabaseErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message
+  if (typeof error === "object" && error !== null && "message" in error) {
+    return String(error.message)
+  }
+  return "Unknown error"
+}
+
 function getSupabaseUrl() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   if (!url) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL")

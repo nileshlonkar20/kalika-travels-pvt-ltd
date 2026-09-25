@@ -45,8 +45,11 @@ export async function POST(request: Request) {
   try {
     const { name, phone, trip, travelDate, destination, passengers } = await request.json()
 
-    if (!name || !phone) {
-      return NextResponse.json({ success: false, message: "Name and phone are required." }, { status: 400 })
+    if (!name || !phone || !trip || !travelDate || !destination || !passengers) {
+      return NextResponse.json(
+        { success: false, message: "Name, phone, vehicle, travel date, passengers and destination are required." },
+        { status: 400 },
+      )
     }
 
     const normalizedPhone = String(phone).replace(/\D/g, "")
@@ -57,10 +60,10 @@ export async function POST(request: Request) {
     const { error } = await getSupabasePublicClient().from("quick_enquiries").insert({
       name,
       phone,
-      vehicle: trip || null,
-      travel_date: travelDate || null,
-      destination: destination || null,
-      passengers: passengers ? Number(passengers) : null,
+      vehicle: trip,
+      travel_date: travelDate,
+      destination,
+      passengers: Number(passengers),
     })
 
     if (error) throw error

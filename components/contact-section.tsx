@@ -265,7 +265,7 @@ export function ContactSection() {
                   <input name="name" value={tripFormData.name} onChange={handleTripChange} placeholder="Your name" required className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent" />
                   <input name="phone" type="tel" inputMode="numeric" pattern="[6-9][0-9]{9}" value={tripFormData.phone} onChange={handleTripChange} placeholder="10-digit mobile number" required className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent" />
                 </div>
-                <select name="vehicle" value={tripFormData.vehicle} onChange={handleTripChange} className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                <select name="vehicle" value={tripFormData.vehicle} onChange={handleTripChange} required className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent">
                   <option value="">Select a vehicle</option>
                   <option>Bus on Rent</option>
                   <option>Car on Rent</option>
@@ -276,8 +276,8 @@ export function ContactSection() {
                   <input name="toLocation" value={tripFormData.toLocation} onChange={handleTripChange} placeholder="To" required className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent" />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <input name="travelDate" type="date" value={tripFormData.travelDate} onChange={handleTripChange} min={new Date().toISOString().split("T")[0]} className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent" />
-                  <input name="passengers" type="number" min="1" max="50" value={tripFormData.passengers} onChange={handleTripChange} placeholder="Passengers" className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent" />
+                  <input name="travelDate" type="date" value={tripFormData.travelDate} onChange={handleTripChange} min={new Date().toISOString().split("T")[0]} required className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent" />
+                  <input name="passengers" type="number" min="1" max="50" value={tripFormData.passengers} onChange={handleTripChange} placeholder="Passengers" required className="h-11 rounded-md border-0 bg-white px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent" />
                 </div>
                 <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Request a Trip Quote</Button>
               </form>

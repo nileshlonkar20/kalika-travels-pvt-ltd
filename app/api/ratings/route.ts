@@ -33,9 +33,9 @@ export async function POST(request: Request) {
     }
 
     const { error } = await getSupabasePublicClient().from("ratings").insert({
-      name: name ? String(name).trim().slice(0, 120) : null,
+      name: name ? String(name).trim().slice(0, 120) : "Anonymous customer",
       rating: numericRating,
-      feedback: feedback ? String(feedback).trim().slice(0, 1000) : null,
+      feedback: feedback ? String(feedback).trim().slice(0, 1000) : "No written feedback",
     })
 
     if (error) throw error

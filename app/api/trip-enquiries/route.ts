@@ -41,8 +41,11 @@ export async function POST(request: Request) {
     const { name, phone, vehicle, fromLocation, toLocation, travelDate, passengers } = await request.json()
     const normalizedPhone = String(phone || "").replace(/\D/g, "")
 
-    if (!name || !phone || !fromLocation || !toLocation) {
-      return NextResponse.json({ success: false, message: "Name, phone, from and destination are required." }, { status: 400 })
+    if (!name || !phone || !vehicle || !fromLocation || !toLocation || !travelDate || !passengers) {
+      return NextResponse.json(
+        { success: false, message: "Name, phone, vehicle, route, travel date and passengers are required." },
+        { status: 400 },
+      )
     }
     if (!/^[6-9]\d{9}$/.test(normalizedPhone)) {
       return NextResponse.json({ success: false, message: "Enter a valid 10-digit mobile number." }, { status: 400 })
@@ -51,11 +54,11 @@ export async function POST(request: Request) {
     const { error } = await getSupabasePublicClient().from("trip_quotes").insert({
       name,
       phone,
-      vehicle: vehicle || null,
+      vehicle,
       from_location: fromLocation,
       to_location: toLocation,
-      travel_date: travelDate || null,
-      passengers: passengers ? Number(passengers) : null,
+      travel_date: travelDate,
+      passengers: Number(passengers),
     })
 
     if (error) throw error

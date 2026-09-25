@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Phone, Star, ShieldCheck, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { contact } from "@/lib/site-data"
+import { getSupabasePublicClient } from "@/lib/supabase"
 
 const initialState = {
   name: "",
@@ -190,6 +191,7 @@ export function Hero() {
                 name="trip"
                 value={formData.trip}
                 onChange={handleChange}
+                required
                 className="h-11 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <option value="" disabled>
@@ -211,6 +213,7 @@ export function Hero() {
                   value={formData.travelDate}
                   onChange={handleChange}
                   min={new Date().toISOString().split("T")[0]}
+                  required
                   className="h-11 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
@@ -225,6 +228,7 @@ export function Hero() {
                   value={formData.passengers}
                   onChange={handleChange}
                   placeholder="No. of people"
+                  required
                   className="h-11 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
@@ -239,6 +243,7 @@ export function Hero() {
                 onChange={handleChange}
                 placeholder="Where are you travelling?"
                 className="h-11 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                required
               />
             </div>
             <Button type="submit" size="lg" className="mt-1 w-full" disabled={isSubmitting}>

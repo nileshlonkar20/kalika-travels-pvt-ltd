@@ -2,6 +2,14 @@ import { NextResponse } from "next/server"
 import { getOwnerSession, isOwnerSessionValid } from "@/lib/owner-auth"
 import { getSupabaseAdminClient, getSupabasePublicClient } from "@/lib/supabase"
 
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message
+  if (typeof error === "object" && error !== null && "message" in error) {
+    return String(error.message)
+  }
+  return "Unknown error"
+}
+
 export async function GET(request: Request) {
   if (!isOwnerSessionValid(getOwnerSession(request))) {
     return NextResponse.json({ success: false, message: "Unauthorized", callbackRequests: [] }, { status: 401 })
@@ -33,7 +41,7 @@ export async function GET(request: Request) {
       {
         success: false,
         message: "Unable to fetch callback requests",
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: getErrorMessage(error),
         callbackRequests: [],
       },
       { status: 500 }
@@ -71,7 +79,7 @@ export async function POST(request: Request) {
       {
         success: false,
         message: "Unable to save callback request",
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: getErrorMessage(error),
       },
       { status: 500 }
     )
@@ -99,7 +107,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ success: count === 1, affectedRows: count || 0 })
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Unable to delete callback request", error: error instanceof Error ? error.message : "Unknown error" },
+      { success: false, message: "Unable to delete callback request", error: getErrorMessage(error) },
       { status: 500 },
     )
   }

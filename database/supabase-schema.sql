@@ -10,6 +10,7 @@ drop policy if exists "Allow public quick enquiry submissions" on public.quick_e
 create policy "Allow public quick enquiry submissions"
 on public.quick_enquiries for insert to anon with check (true);
 
+drop policy if exists "Allow public contact submissions" on public.contact_messages;
 drop policy if exists "Allow public contact message submissions" on public.contact_messages;
 create policy "Allow public contact message submissions"
 on public.contact_messages for insert to anon with check (true);

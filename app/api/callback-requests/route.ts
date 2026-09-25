@@ -1,32 +1,6 @@
 import { NextResponse } from "next/server"
-import { assertDatabaseConfig, db } from "@/lib/db"
 import { getOwnerSession, isOwnerSessionValid } from "@/lib/owner-auth"
-
-async function ensureTable() {
-  assertDatabaseConfig()
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS callback_requests (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      phone VARCHAR(50) NOT NULL,
-      trip VARCHAR(255) DEFAULT NULL,
-      source VARCHAR(50) NOT NULL DEFAULT 'callback',
-      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
-  `)
-
-  for (const column of [
-    "ALTER TABLE callback_requests ADD COLUMN travel_date DATE DEFAULT NULL",
-    "ALTER TABLE callback_requests ADD COLUMN destination VARCHAR(255) DEFAULT NULL",
-    "ALTER TABLE callback_requests ADD COLUMN passengers INT DEFAULT NULL",
-  ]) {
-    try {
-      await db.execute(column)
-    } catch {
-      // Existing deployments already have the column.
-    }
-  }
-}
+import { getSupabaseAdminClient, getSupabasePublicClient } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   if (!isOwnerSessionValid(getOwnerSession(request))) {
@@ -34,13 +8,24 @@ export async function GET(request: Request) {
   }
 
   try {
-    await ensureTable()
+    const { data, error } = await getSupabaseAdminClient()
+      .from("enquiries")
+      .select("id, name, phone, vehicle, travel_date, passengers, destination, created_at")
+      .order("created_at", { ascending: false })
 
-    const [rows] = await db.execute(
-      `SELECT id, name, phone, trip, travel_date as travelDate, destination, passengers, source, created_at as createdAt
-       FROM callback_requests
-       ORDER BY created_at DESC`
-    )
+    if (error) throw error
+
+    const rows = data.map((enquiry) => ({
+      id: enquiry.id,
+      name: enquiry.name,
+      phone: enquiry.phone,
+      trip: enquiry.vehicle,
+      travelDate: enquiry.travel_date,
+      passengers: enquiry.passengers,
+      destination: enquiry.destination,
+      source: "callback",
+      createdAt: enquiry.created_at,
+    }))
 
     return NextResponse.json({ success: true, callbackRequests: rows })
   } catch (error) {
@@ -58,9 +43,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    await ensureTable()
-
-    const { name, phone, trip, travelDate, destination, passengers, source, createdAt } = await request.json()
+    const { name, phone, trip, travelDate, destination, passengers } = await request.json()
 
     if (!name || !phone) {
       return NextResponse.json({ success: false, message: "Name and phone are required." }, { status: 400 })
@@ -71,11 +54,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Enter a valid 10-digit mobile number." }, { status: 400 })
     }
 
-    await db.execute(
-      `INSERT INTO callback_requests (name, phone, trip, travel_date, destination, passengers, source, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, phone, trip || null, travelDate || null, destination || null, passengers ? Number(passengers) : null, source || "callback", createdAt || new Date().toISOString()]
-    )
+    const { error } = await getSupabasePublicClient().from("enquiries").insert({
+      name,
+      phone,
+      vehicle: trip || null,
+      travel_date: travelDate || null,
+      destination: destination || null,
+      passengers: passengers ? Number(passengers) : null,
+    })
+
+    if (error) throw error
 
     return NextResponse.json({ success: true, message: "Callback request saved successfully." })
   } catch (error) {
@@ -96,16 +84,19 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    assertDatabaseConfig()
     const { id } = await request.json()
     const requestId = Number(id)
     if (!Number.isSafeInteger(requestId) || requestId < 1) {
       return NextResponse.json({ success: false, message: "A valid request id is required." }, { status: 400 })
     }
 
-    const [result] = await db.execute("DELETE FROM callback_requests WHERE id = ?", [requestId])
-    const affectedRows = "affectedRows" in result ? result.affectedRows : 0
-    return NextResponse.json({ success: affectedRows === 1, affectedRows })
+    const { error, count } = await getSupabaseAdminClient()
+      .from("enquiries")
+      .delete({ count: "exact" })
+      .eq("id", requestId)
+
+    if (error) throw error
+    return NextResponse.json({ success: count === 1, affectedRows: count || 0 })
   } catch (error) {
     return NextResponse.json(
       { success: false, message: "Unable to delete callback request", error: error instanceof Error ? error.message : "Unknown error" },

@@ -18,6 +18,17 @@ type CustomerReview = {
   created_at: string
 }
 
+async function fetchCustomerReviews(): Promise<CustomerReview[] | null> {
+  try {
+    const response = await fetch("/api/ratings/public", { cache: "no-store" })
+    if (!response.ok) return null
+    const result = await response.json()
+    return Array.isArray(result.ratings) ? result.ratings : null
+  } catch {
+    return null
+  }
+}
+
 export function TestimonialSection() {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [activeVideo, setActiveVideo] = useState(0)
@@ -31,10 +42,8 @@ export function TestimonialSection() {
   useEffect(() => {
     const loadCustomerReviews = async () => {
       try {
-        const response = await fetch("/api/ratings/public")
-        if (!response.ok) return
-        const result = await response.json()
-        if (Array.isArray(result.ratings)) setCustomerReviews(result.ratings)
+        const reviews = await fetchCustomerReviews()
+        if (reviews) setCustomerReviews(reviews)
       } catch {
         setCustomerReviews([])
       }
@@ -62,6 +71,8 @@ export function TestimonialSection() {
         body: JSON.stringify({ rating, name, feedback }),
       })
       if (!response.ok) throw new Error("Unable to submit rating")
+      const updatedReviews = await fetchCustomerReviews()
+      if (updatedReviews) setCustomerReviews(updatedReviews)
       setIsSubmitted(true)
       setRating(0)
       setName("")

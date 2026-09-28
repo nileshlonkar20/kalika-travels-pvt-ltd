@@ -54,8 +54,9 @@ export function Hero() {
           name: formData.name,
           phone: formData.phone,
           trip: formData.trip,
-          source: "callback",
-          createdAt: new Date().toISOString(),
+          travelDate: formData.travelDate,
+          destination: formData.destination,
+          passengers: formData.passengers,
         }),
       })
 

@@ -99,32 +99,6 @@ export function TestimonialSection() {
           </figcaption>
         </figure>
 
-        <div className="mt-10 text-left">
-          <h3 className="font-heading text-2xl font-bold text-foreground">Recent customer reviews</h3>
-          {customerReviews.length === 0 ? (
-            <p className="mt-3 text-sm text-muted-foreground">Customer reviews will appear here after they are submitted.</p>
-          ) : (
-            <div className="mt-4 divide-y divide-border border-y border-border">
-              {customerReviews.map((review) => (
-                <article key={review.id} className="py-5">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="font-semibold text-foreground">{review.name || "Anonymous customer"}</p>
-                    <time className="text-sm text-muted-foreground" dateTime={review.created_at}>
-                      {new Date(review.created_at).toLocaleDateString()}
-                    </time>
-                  </div>
-                  <div className="mt-2 flex gap-1 text-accent" aria-label={`${review.rating} out of 5 stars`}>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star key={index} className={`h-4 w-4 ${index < review.rating ? "fill-accent" : ""}`} />
-                    ))}
-                  </div>
-                  {review.feedback ? <p className="mt-2 text-sm leading-relaxed text-foreground/80">{review.feedback}</p> : null}
-                </article>
-              ))}
-            </div>
-          )}
-        </div>
-
         <div className="mt-8 overflow-hidden rounded-2xl border border-border bg-card p-3 text-left shadow-sm sm:p-4">
           <div className="relative overflow-hidden rounded-xl bg-black">
             {customerVideos.map((video, index) => (
@@ -232,6 +206,32 @@ export function TestimonialSection() {
                 {isSubmitting ? "Submitting..." : "Submit rating"}
               </button>
             </form>
+          )}
+        </div>
+
+        <div className="mt-10 text-left">
+          <h3 className="font-heading text-2xl font-bold text-foreground">Recent customer reviews</h3>
+          {customerReviews.length === 0 ? (
+            <p className="mt-3 text-sm text-muted-foreground">Customer reviews will appear here after they are submitted.</p>
+          ) : (
+            <div className="mt-4 divide-y divide-border border-y border-border">
+              {customerReviews.map((review) => (
+                <article key={review.id} className="py-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-semibold text-foreground">{review.name || "Anonymous customer"}</p>
+                    <time className="text-sm text-muted-foreground" dateTime={review.created_at}>
+                      {new Date(review.created_at).toLocaleDateString()}
+                    </time>
+                  </div>
+                  <div className="mt-2 flex gap-1 text-accent" aria-label={`${review.rating} out of 5 stars`}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star key={index} className={`h-4 w-4 ${index < review.rating ? "fill-accent" : ""}`} />
+                    ))}
+                  </div>
+                  {review.feedback ? <p className="mt-2 text-sm leading-relaxed text-foreground/80">{review.feedback}</p> : null}
+                </article>
+              ))}
+            </div>
           )}
         </div>
       </div>

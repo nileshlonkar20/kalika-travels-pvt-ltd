@@ -127,6 +127,22 @@ export function ContactSection() {
                 </span>
               </a>
 
+              <a
+                href={contact.alternatePhoneHref}
+                aria-label={`Call Kalika Translink at ${contact.alternatePhone}`}
+                className="group flex items-start gap-4"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Phone className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block text-sm font-medium text-muted-foreground">Also call</span>
+                  <span className="font-heading font-semibold text-foreground group-hover:text-primary">
+                    {contact.alternatePhone}
+                  </span>
+                </span>
+              </a>
+
               <a href={contact.emailHref} className="flex items-start gap-4 group">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Mail className="h-5 w-5" />

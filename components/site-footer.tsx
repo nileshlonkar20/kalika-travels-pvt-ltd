@@ -53,6 +53,12 @@ export function SiteFooter() {
               </a>
             </li>
             <li>
+              <a href={contact.alternatePhoneHref} className="flex items-start gap-2.5 text-primary-foreground/75 transition-colors hover:text-primary-foreground">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                {contact.alternatePhone}
+              </a>
+            </li>
+            <li>
               <a href={contact.emailHref} className="flex items-start gap-2.5 break-all text-primary-foreground/75 transition-colors hover:text-primary-foreground">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                 {contact.email}

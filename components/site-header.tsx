@@ -72,6 +72,10 @@ export function SiteHeader() {
               <Phone className="h-4 w-4 text-accent" />
               {contact.phone}
             </a>
+            <a href={contact.alternatePhoneHref} className="flex items-center gap-2 transition-opacity hover:opacity-80">
+              <Phone className="h-4 w-4 text-accent" />
+              {contact.alternatePhone}
+            </a>
             <a href={contact.emailHref} className="flex items-center gap-2 transition-opacity hover:opacity-80">
               <Mail className="h-4 w-4 text-accent" />
               {contact.email}

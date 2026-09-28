@@ -1,6 +1,8 @@
 export const contact = {
   phone: "+91 70305 09058",
   phoneHref: "tel:+917030509058",
+  alternatePhone: "+91 98227 09058",
+  alternatePhoneHref: "tel:+919822709058",
   email: "nilesh.mymails@gmail.com",
   emailHref: "mailto:nilesh.mymails@gmail.com",
   whatsappHref: "https://wa.me/917030509058",

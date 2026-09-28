@@ -14,7 +14,7 @@ export default function TermsPage() {
         <div className="mt-10 space-y-8 leading-relaxed text-muted-foreground">
           <section><h2 className="font-heading text-xl font-bold text-foreground">Bookings</h2><p className="mt-3">A booking is confirmed after vehicle availability, trip details and pricing are agreed with Kalika Translink. Quotes may change when dates, route, vehicle or passenger requirements change.</p></section>
           <section><h2 className="font-heading text-xl font-bold text-foreground">Trip responsibility</h2><p className="mt-3">Customers must provide accurate pickup, destination, date and passenger details. Extra kilometres, waiting time, tolls, parking and route changes may be charged where applicable and will be explained before confirmation whenever possible.</p></section>
-          <section><h2 className="font-heading text-xl font-bold text-foreground">Contact</h2><p className="mt-3">For booking questions, call <a className="font-semibold text-primary" href="tel:+917030509058">+91 70305 09058</a>.</p></section>
+          <section><h2 className="font-heading text-xl font-bold text-foreground">Contact</h2><p className="mt-3">For booking questions, call <a className="font-semibold text-primary" href="tel:+917030509058">+91 70305 09058</a> or <a className="font-semibold text-primary" href="tel:+919822709058">+91 98227 09058</a>.</p></section>
         </div>
       </article>
     </main>

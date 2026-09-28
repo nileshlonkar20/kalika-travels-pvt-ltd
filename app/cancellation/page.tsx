@@ -14,7 +14,7 @@ export default function CancellationPage() {
         <div className="mt-10 space-y-8 leading-relaxed text-muted-foreground">
           <section><h2 className="font-heading text-xl font-bold text-foreground">Changes and cancellations</h2><p className="mt-3">Please contact Kalika Translink as early as possible if you need to change or cancel a booking. Charges, if any, depend on how close the request is to the trip date and whether the vehicle and driver have already been assigned.</p></section>
           <section><h2 className="font-heading text-xl font-bold text-foreground">Refunds</h2><p className="mt-3">Any eligible refund is reviewed against the agreed booking terms and returned through the original payment method where applicable. Custom tour packages may have separate conditions.</p></section>
-          <section><h2 className="font-heading text-xl font-bold text-foreground">Contact us</h2><p className="mt-3">Call <a className="font-semibold text-primary" href="tel:+917030509058">+91 70305 09058</a> to discuss a change or cancellation.</p></section>
+          <section><h2 className="font-heading text-xl font-bold text-foreground">Contact us</h2><p className="mt-3">Call <a className="font-semibold text-primary" href="tel:+917030509058">+91 70305 09058</a> or <a className="font-semibold text-primary" href="tel:+919822709058">+91 98227 09058</a> to discuss a change or cancellation.</p></section>
         </div>
       </article>
     </main>

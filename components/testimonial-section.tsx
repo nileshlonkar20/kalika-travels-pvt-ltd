@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Star, Quote, Play } from "lucide-react"
+import { Star, Play } from "lucide-react"
 
 const customerVideos = [
   { src: "/images/customer_satisfaction.mp4", label: "Customer satisfaction" },
@@ -92,24 +92,6 @@ export function TestimonialSection() {
           What our customers say
         </h2>
 
-        <figure className="mt-10 rounded-2xl border border-border bg-card p-8 shadow-sm sm:p-12">
-          <Quote className="mx-auto h-10 w-10 text-accent" aria-hidden />
-          <blockquote className="mt-6 text-lg leading-relaxed text-foreground sm:text-xl">
-            &ldquo;We had hired a bus from Kalika Translink for an office outing. The driver was punctual and the bus was in
-            a well-maintained condition. We had a good experience during the entire process — from making the booking
-            to the end of the journey. Will definitely recommend Kalika Translink if you need their services.&rdquo;
-          </blockquote>
-          <div className="mt-6 flex items-center justify-center gap-1 text-accent">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className="h-5 w-5 fill-accent" />
-            ))}
-          </div>
-          <figcaption className="mt-4 font-heading font-bold text-foreground">
-            Janardan
-            <span className="block text-sm font-normal text-muted-foreground">Office Outing · Pune</span>
-          </figcaption>
-        </figure>
-
         <div className="mt-8 overflow-hidden rounded-2xl border border-border bg-card p-3 text-left shadow-sm sm:p-4">
           <div className="relative overflow-hidden rounded-xl bg-black">
             {customerVideos.map((video, index) => (
@@ -163,10 +145,6 @@ export function TestimonialSection() {
             ))}
           </div>
         </div>
-
-        <p className="mt-8 text-sm font-medium text-muted-foreground">
-          Rated <span className="font-bold text-foreground">4.8 out of 5</span> across 660+ customer reviews
-        </p>
 
         <div className="mt-10 rounded-2xl border border-border bg-card p-6 text-left shadow-sm sm:p-8">
           <div className="text-center">
